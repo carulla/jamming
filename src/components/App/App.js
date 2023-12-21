@@ -35,14 +35,28 @@ const App = () => {
     setPlaylistName(name);
   }, []);
 
+  // const savePlaylist = useCallback(() => {
+  //   const trackUris = playlistTracks.map((track) => track.uri);
+  //   Spotify.savePlaylist(playlistName, trackUris).then(() => {
+  //     setPlaylistName("New Playlist");
+  //     setPlaylistTracks([]);
+  //   });
+  // }, [playlistName, playlistTracks]);
   const savePlaylist = useCallback(() => {
     const trackUris = playlistTracks.map((track) => track.uri);
-    Spotify.savePlaylist(playlistName, trackUris).then(() => {
-      setPlaylistName("New Playlist");
-      setPlaylistTracks([]);
+    return new Promise((resolve, reject) => {
+      Spotify.savePlaylist(playlistName, trackUris)
+        .then(() => {
+          setPlaylistName("New Playlist");
+          setPlaylistTracks([]);
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
     });
   }, [playlistName, playlistTracks]);
-
+  
   return (
     <div>
       <h1>
