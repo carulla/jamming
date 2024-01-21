@@ -2,7 +2,6 @@
 const clientId = "a71c846fa803496c8303cb6901843523";
 const redirectUri = 'https://jammingproject.netlify.app/'; // Have to add this to your accepted Spotify redirect URIs on the Spotify API.
 let accessToken = "";
-let userId = "";
 
 
 
