@@ -1,33 +1,28 @@
-import React, { useCallback } from "react";
-
-import "./Track.css";
+import React, { useCallback } from 'react';
+import './Track.css';
 
 const Track = (props) => {
-  const addTrack = useCallback(
-    (event) => {
-      props.onAdd(props.track);
-    },
-    [props.onAdd, props.track]
-  );
+  const addTrack = useCallback(() => {
+    props.onAdd(props.track);
+  }, [props]);
 
-  const removeTrack = useCallback(
-    (event) => {
-      props.onRemove(props.track);
-    },
-    [props.onRemove, props.track]
-  );
+  const removeTrack = useCallback(() => {
+    props.onRemove(props.track);
+  }, [props]);
 
   const renderAction = () => {
     if (props.isRemoval) {
       return (
         <button className="Track-action" onClick={removeTrack}>
-          -
+          {' '}
+          -{' '}
         </button>
       );
     }
     return (
       <button className="Track-action" onClick={addTrack}>
-        +
+        {' '}
+        +{' '}
       </button>
     );
   };
