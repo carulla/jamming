@@ -2,7 +2,24 @@
 const clientId = "a71c846fa803496c8303cb6901843523";
 const redirectUri = 'http://localhost:3000/'; // Have to add this to your accepted Spotify redirect URIs on the Spotify API.
 let accessToken = "";
+let userId = "";
 
+
+
+async function getCurrentUserId() {
+  if (userId) {
+    return Promise.resolve(userId);
+  } else {
+    const response = await fetch("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    const data = await response.json();
+    userId = data.id;
+    return userId;
+  }
+}
 const Spotify = {
     getAccessToken() {
       if (accessToken) {
@@ -44,11 +61,33 @@ const Spotify = {
         }));
       });
     },
+
+    async getUserPlaylists() {
+      const userId = await getCurrentUserId();
+      const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      const playlists = data.items ? data.items.map((item) => {
+        return {
+          playlistId: item.id,
+          name: item.name,
+        };
+      }) : [];
+      return playlists;
+    },
   
-    savePlaylist(name, trackUris) {
-      if (!name || !trackUris.length) {
-        return;
-      }
+    savePlaylist(name, trackUris, id) {
+      if (!name || !trackUris.length || id) {
+        return fetch `https://api.spotify.com/v1/users/{user_id}/playlists/{playlist_id}`, {
+          headers: {Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        }
+        };
+    }
   
       const accessToken = Spotify.getAccessToken();
       const headers = { Authorization: `Bearer ${accessToken}` };
@@ -72,7 +111,26 @@ const Spotify = {
           });
         });
       });
+    },
+    
+    async getPlaylist(id) {
+      const userId = await getCurrentUserId();
+      const response = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists/${id}/tracks`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      const data = await response.json();
+      const tracks = data.items.map((item) => {
+        return {
+          trackId: item.track.id,
+          name: item.track.name,
+        };
+      });
+      return tracks;
     }
+
   };
   
   export default Spotify;
+

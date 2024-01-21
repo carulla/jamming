@@ -10,6 +10,7 @@ const App = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [playlistName, setPlaylistName] = useState("New Playlist");
   const [playlistTracks, setPlaylistTracks] = useState([]);
+  
 
   const search = useCallback((term) => {
     Spotify.search(term).then(setSearchResults);
@@ -35,13 +36,7 @@ const App = () => {
     setPlaylistName(name);
   }, []);
 
-  // const savePlaylist = useCallback(() => {
-  //   const trackUris = playlistTracks.map((track) => track.uri);
-  //   Spotify.savePlaylist(playlistName, trackUris).then(() => {
-  //     setPlaylistName("New Playlist");
-  //     setPlaylistTracks([]);
-  //   });
-  // }, [playlistName, playlistTracks]);
+
   const savePlaylist = useCallback(() => {
     const trackUris = playlistTracks.map((track) => track.uri);
     return new Promise((resolve, reject) => {
@@ -56,6 +51,7 @@ const App = () => {
         });
     });
   }, [playlistName, playlistTracks]);
+
   
   return (
     <div>
@@ -73,6 +69,7 @@ const App = () => {
             onRemove={removeTrack}
             onSave={savePlaylist}
           />
+          
         </div>
       </div>
     </div>
